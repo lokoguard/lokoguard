@@ -49,7 +49,7 @@ class Middleware {
             const token = bearer_token.split(" ")[1];
             const device = await prisma.authToken.findFirstOrThrow({
                 where: {
-                    apiKey: token
+                    token: token
                 },
                 select: {
                     sender: {
@@ -68,6 +68,7 @@ class Middleware {
             req.is_device = true;
             next();
         } catch (err) {
+            console.log(err);
             res.status(401).json({
                 message: "Unauthorized"
             });

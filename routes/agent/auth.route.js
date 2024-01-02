@@ -2,7 +2,7 @@ const router = require("express").Router();
 const middleware = require("../../middleware");
 
 // Verify
-router.get("/verify", middleware.managementAuth, async (req, res) => {
+router.get("/verify", middleware.deviceAuth, async (req, res) => {
     return res.json({
         message: "Logged in"
     });
