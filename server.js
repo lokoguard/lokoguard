@@ -20,7 +20,7 @@ app.use(cors({
 }))
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth', require('./routes/auth.route'));
 
 // 404 handler
 app.get('*', (req, res) => {
