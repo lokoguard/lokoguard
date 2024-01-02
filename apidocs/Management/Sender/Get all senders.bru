@@ -1,11 +1,11 @@
 meta {
-  name: Logout
+  name: Get all senders
   type: http
-  seq: 2
+  seq: 1
 }
 
-post {
-  url: {{BASE_URL}}/api/auth/logout
+get {
+  url: {{BASE_URL}}/api/management/senders
   body: none
   auth: bearer
 }

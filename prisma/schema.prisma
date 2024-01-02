@@ -32,10 +32,10 @@ model User {
 model Sender {
     id              Int         @id @default(autoincrement())
     type            SenderType
-    ip              String      @default("")
-    mac             String      @default("")
-    hostname        String      @default("")
-    applicationName String      @default("")
+    ip              String      @default("") @unique
+    mac             String      @default("") @unique
+    hostname        String      @default("") @unique
+    applicationName String      @default("") @unique
     lastSeen        DateTime    @default(now())
     AuthTokens      AuthToken[]
 }

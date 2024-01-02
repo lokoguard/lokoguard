@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const prisma = require("../db").getInstance();
+const prisma = require("../../db").getInstance();
 const bcrypt = require('bcrypt');
 const { generateApiKey } = require("generate-api-key");
-const middleware = require("../middleware");
+const middleware = require("../../middleware");
 
 
 router.post("/login", async (req, res) => {
@@ -64,7 +64,7 @@ router.post("/logout", async (req, res) => {
 })
 
 // Verify
-router.get("/verify", middleware.auth, async (req, res) => {
+router.get("/verify", middleware.managementAuth, async (req, res) => {
     return res.json({
         message: "Logged in"
     });

@@ -7,10 +7,10 @@ class Middleware {
      * @param {Response} res 
      * @param {NextFunction} next 
      */
-    static async auth(req, res, next) {
+    static async managementAuth(req, res, next) {
         try {
             const bearer_token = req.headers.authorization;
-            if(bearer_token === null || bearer_token === undefined) throw new Error("Unauthorized");
+            if (bearer_token === null || bearer_token === undefined) throw new Error("Unauthorized");
             const token = bearer_token.split(" ")[1];
             const user = await prisma.userAPIKey.findFirstOrThrow({
                 where: {
@@ -27,6 +27,45 @@ class Middleware {
                 }
             })
             req.user = user.user;
+            req.is_user = true;
+            next();
+        } catch (err) {
+            res.status(401).json({
+                message: "Unauthorized"
+            });
+        }
+    }
+
+
+    /**
+     * @param {Request} req 
+     * @param {Response} res 
+     * @param {NextFunction} next 
+     */
+    static async deviceAuth(req, res, next) {
+        try {
+            const bearer_token = req.headers.authorization;
+            if (bearer_token === null || bearer_token === undefined) throw new Error("Unauthorized");
+            const token = bearer_token.split(" ")[1];
+            const device = await prisma.authToken.findFirstOrThrow({
+                where: {
+                    apiKey: token
+                },
+                select: {
+                    sender: {
+                        select: {
+                            id: true,
+                            applicationName: true,
+                            hostname: true,
+                            mac: true,
+                            type: true,
+                            ip: true,
+                        }
+                    }
+                }
+            })
+            req.sender = device.sender;
+            req.is_device = true;
             next();
         } catch (err) {
             res.status(401).json({

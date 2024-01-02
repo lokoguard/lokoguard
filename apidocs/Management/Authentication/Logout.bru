@@ -1,11 +1,11 @@
 meta {
-  name: Verify
+  name: Logout
   type: http
-  seq: 3
+  seq: 2
 }
 
-get {
-  url: {{BASE_URL}}/api/auth/verify
+post {
+  url: {{BASE_URL}}/api/management/auth/logout
   body: none
   auth: bearer
 }

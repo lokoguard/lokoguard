@@ -6,7 +6,8 @@ const DEBUG = process.env.DEBUG || false;
 // Express
 const express = require('express');
 // const Middlware = require("./middleware");
-var cors = require('cors')
+var cors = require('cors');
+const Middleware = require('./middleware');
 const app = express();
 // Config
 app.disable('x-powered-by')
@@ -20,7 +21,9 @@ app.use(cors({
 }))
 
 // Routes
-app.use('/api/auth', require('./routes/auth.route'));
+app.use('/api/management/auth', require('./routes/management/auth.route'));
+app.use('/api/management/senders', Middleware.managementAuth, require('./routes/management/sender.route'));
+app.use('/api/agent/auth', require('./routes/agent/auth.route'));
 
 // 404 handler
 app.get('*', (req, res) => {
@@ -41,7 +44,6 @@ app.delete('*', (req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-    console.error(err);
     res.status(500).json({ error: "Unexpected Error" });
 })
 

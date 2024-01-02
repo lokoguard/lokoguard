@@ -1,0 +1,24 @@
+meta {
+  name: Add Sender
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/api/management/senders
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{API_TOKEN}}
+}
+
+body:json {
+  {
+    "type": "device",
+    "ip": "192.168.0.1",
+    "mac": "03",
+    "hostname": "cdcju"
+  }
+}
