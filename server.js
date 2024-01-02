@@ -21,8 +21,7 @@ app.use(cors({
 }))
 
 // Routes
-app.use('/api/management/auth', require('./routes/management/auth.route'));
-app.use('/api/management/senders', Middleware.managementAuth, require('./routes/management/sender.route'));
+app.use('/api/management', require('./routes/management.route'));
 app.use('/api/agent', require('./routes/agent.route'));
 
 // 404 handler
