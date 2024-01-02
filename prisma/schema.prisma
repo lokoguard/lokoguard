@@ -1,0 +1,39 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = []
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum SenderType {
+    DEVICE
+    APP
+}
+
+model User {
+    id           Int    @id @default(autoincrement())
+    email        String @unique
+    name         String
+    passwordHash String
+}
+
+model Sender {
+    id              Int         @id @default(autoincrement())
+    type            SenderType
+    ip              String      @default("")
+    mac             String      @default("")
+    hostname        String      @default("")
+    applicationName String      @default("")
+    lastSeen        DateTime    @default(now())
+    AuthTokens      AuthToken[]
+}
+
+model AuthToken {
+    id       String @id @default(uuid())
+    token    String
+    senderId Int
+    sender   Sender @relation(fields: [senderId], references: [id])
+}
