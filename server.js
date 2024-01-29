@@ -5,7 +5,7 @@ const DEBUG = process.env.DEBUG || false;
 
 // Express
 const express = require('express');
-// const Middlware = require("./middleware");
+// const Middleware = require("./middleware");
 var cors = require('cors');
 const Middleware = require('./middleware');
 const app = express();

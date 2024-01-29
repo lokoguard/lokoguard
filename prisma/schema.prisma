@@ -30,14 +30,16 @@ model User {
 }
 
 model Sender {
-    id              Int         @id @default(autoincrement())
-    type            SenderType
-    ip              String      @default("") @unique
-    mac             String      @default("") @unique
-    hostname        String      @default("") @unique
-    applicationName String      @default("") @unique
-    lastSeen        DateTime    @default(now())
-    AuthTokens      AuthToken[]
+    id                  Int                   @id @default(autoincrement())
+    type                SenderType
+    ip                  String                @unique @default("")
+    mac                 String                @unique @default("")
+    hostname            String                @unique @default("")
+    applicationName     String                @unique @default("")
+    lastSeen            DateTime              @default(now())
+    AuthTokens          AuthToken[]
+    ResourceStats       ResourceStats[]
+    ScriptRunnerRequest ScriptRunnerRequest[]
 }
 
 model AuthToken {
@@ -45,4 +47,60 @@ model AuthToken {
     token    String
     senderId Int
     sender   Sender @relation(fields: [senderId], references: [id])
+}
+
+enum EventType {
+    create
+    access
+    delete
+    write
+}
+
+model FileIntegrityMonitor {
+    id        Int       @id @default(autoincrement())
+    FileName  String
+    EventType EventType
+    Timestamp Int
+}
+
+model ResourceStats {
+    id               Int  @id @default(autoincrement())
+    CPUStats         Json @default("[]")
+    MemStat          Json @default("{}")
+    DiskStats        Json @default("[]")
+    TemperatureStats Json @default("[]")
+    NetStat          Json @default("{}")
+    HostInfo         Json @default("{}")
+    Timestamp        Int
+
+    senderId Int
+    sender   Sender @relation(fields: [senderId], references: [id])
+}
+
+enum ScriptRunnerStatus {
+    pending
+    done
+}
+
+model ScriptRunnerRequest {
+    id     Int      @id @default(autoincrement()) // task id
+    Script String
+    Args   String[]
+    Status ScriptRunnerStatus @default(pending)
+
+    senderId           Int
+    sender             Sender               @relation(fields: [senderId], references: [id])
+    ScriptRunnerResult ScriptRunnerResult[]
+}
+
+model ScriptRunnerResult {
+    id Int @id @default(autoincrement())
+
+    Output   String
+    Error    String
+    Success  Boolean
+    ExitCode Int
+
+    scriptRunnerRequestId Int // task id
+    scriptRunnerRequest   ScriptRunnerRequest @relation(fields: [scriptRunnerRequestId], references: [id])
 }
