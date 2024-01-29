@@ -40,6 +40,7 @@ model Sender {
     AuthTokens          AuthToken[]
     ResourceStats       ResourceStats[]
     ScriptRunnerRequest ScriptRunnerRequest[]
+    WatchingFile        WatchingFile[]
 }
 
 model AuthToken {
@@ -54,6 +55,14 @@ enum EventType {
     access
     delete
     write
+}
+
+model WatchingFile {
+    id       Int    @id @default(autoincrement())
+    FileName String
+
+    senderId Int
+    sender   Sender @relation(fields: [senderId], references: [id])
 }
 
 model FileIntegrityMonitor {
@@ -83,7 +92,7 @@ enum ScriptRunnerStatus {
 }
 
 model ScriptRunnerRequest {
-    id     Int      @id @default(autoincrement()) // task id
+    id     Int                @id @default(autoincrement()) // task id
     Script String
     Args   String[]
     Status ScriptRunnerStatus @default(pending)

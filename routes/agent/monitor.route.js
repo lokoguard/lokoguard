@@ -2,11 +2,28 @@ const router = require("express").Router();
 const prisma = require("../../db").getInstance();
  
 
-router.post("/file-integrity", async (req, res) => {
+router.get("/file-integrity/files", async (req, res) => {
+    try {
+        const integrity_reports = await prisma.watchingFile.findMany({
+            where: {
+                senderId: req.sender.id,
+            },
+            select: {
+                FileName: true,
+            }
+        })
+        const file_names = integrity_reports.map(report => report.FileName);
+        return res.status(200).json(file_names);
+    } catch (error) {
+        return res.status(500).json({ error: "Unexpected Error" });
+    }
+});
+
+router.post("/file-integrity/result", async (req, res) => {
     try { 
         const integrity_reports = req.body;
         await prisma.$transaction(integrity_reports.map(report => {
-            return prisma.fileIntegrity.create({
+            return prisma.fileIntegrityMonitor.create({
                 data: {
                     senderId: req.sender.id,
                     FileName: report.file_name,
