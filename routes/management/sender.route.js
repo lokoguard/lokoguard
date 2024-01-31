@@ -3,6 +3,26 @@ const prisma = require("../../db").getInstance();
 const { SenderType } = require("@prisma/client");
 const { generateApiKey } = require("generate-api-key");
 
+// Get all senders
+router.get("/", async (req, res) => {
+    const senders = await prisma.sender.findMany();
+    res.json(senders);
+})
+
+// Get sender by id
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    const sender = await prisma.sender.findFirst({
+        where: {
+            id: parseInt(id)
+        }
+    });
+    if(!sender) return res.status(404).json({
+        error: "Not Found"
+    });
+    res.json(sender);
+})
+
 // Add new sender
 router.post("/", async (req, res) => {
     const { applicationName, hostname, mac, ip, type } = req.body;
@@ -87,26 +107,6 @@ router.patch("/:id", async (req, res) => {
             type: sender_type,
             ip
         }
-    });
-    res.json(sender);
-})
-
-// Get all senders
-router.get("/", async (req, res) => {
-    const senders = await prisma.sender.findMany();
-    res.json(senders);
-})
-
-// Get sender by id
-router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    const sender = await prisma.sender.findFirst({
-        where: {
-            id: parseInt(id)
-        }
-    });
-    if(!sender) return res.status(404).json({
-        error: "Not Found"
     });
     res.json(sender);
 })

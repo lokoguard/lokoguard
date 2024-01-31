@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const prisma = require("../../db").getInstance();
 
-router.get("/fetch", async (req, res) => {
+router.get("", async (req, res) => {
     try {
         const executors = await prisma.scriptRunnerRequest.findMany({
             where: {

@@ -8,11 +8,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum SenderType {
-    DEVICE
-    APP
-}
-
+// Models for Management Users for Lokoguard
 model UserAPIKey {
     id        Int      @id @default(autoincrement())
     userId    Int
@@ -29,6 +25,14 @@ model User {
     UserAPIKey   UserAPIKey[]
 }
 
+// Models for Lokoguard Agents
+
+enum SenderType {
+    DEVICE
+    APP
+}
+
+// Sender can be a device (server, laoptop, etc) or an app (mobile app, desktop app, web app)
 model Sender {
     id                  Int                   @id @default(autoincrement())
     type                SenderType
@@ -37,12 +41,16 @@ model Sender {
     hostname            String                @unique @default("")
     applicationName     String                @unique @default("")
     lastSeen            DateTime              @default(now())
-    AuthTokens          AuthToken[]
-    ResourceStats       ResourceStats[]
-    ScriptRunnerRequest ScriptRunnerRequest[]
-    WatchingFile        WatchingFile[]
+    authTokens          AuthToken[]
+    resourceStats       ResourceStats[]
+    scriptRunnerRequest ScriptRunnerRequest[]
+    fileWatchers        FileWatcher[]
+    logMessages         LogMessage[]
 }
 
+// AuthToken is used to authenticate the sender
+// It's restricted to only submit result to server
+// So, for apps, it's a allowed to expose to public
 model AuthToken {
     id       String @id @default(uuid())
     token    String
@@ -50,14 +58,8 @@ model AuthToken {
     sender   Sender @relation(fields: [senderId], references: [id])
 }
 
-enum EventType {
-    create
-    access
-    delete
-    write
-}
-
-model WatchingFile {
+// File access monitoring
+model FileWatcher {
     id       Int    @id @default(autoincrement())
     FileName String
 
@@ -65,26 +67,36 @@ model WatchingFile {
     sender   Sender @relation(fields: [senderId], references: [id])
 }
 
-model FileIntegrityMonitor {
-    id        Int       @id @default(autoincrement())
-    FileName  String
-    EventType EventType
-    Timestamp Int
+enum FileAccessEventType {
+    create
+    access
+    delete
+    write
 }
 
+model FileAccessEvent {
+    id        Int                 @id @default(autoincrement())
+    fileName  String
+    eventType FileAccessEventType
+    timestamp Int
+}
+
+// Resource monitoring
 model ResourceStats {
     id               Int  @id @default(autoincrement())
-    CPUStats         Json @default("[]")
-    MemStat          Json @default("{}")
-    DiskStats        Json @default("[]")
-    TemperatureStats Json @default("[]")
-    NetStat          Json @default("{}")
-    HostInfo         Json @default("{}")
-    Timestamp        Int
+    cpuStats         Json @default("[]")
+    memStat          Json @default("{}")
+    diskStats        Json @default("[]")
+    temperatureStats Json @default("[]")
+    netStat          Json @default("{}")
+    hostInfo         Json @default("{}")
+    timestamp        Int
 
     senderId Int
     sender   Sender @relation(fields: [senderId], references: [id])
 }
+
+// Script runner
 
 enum ScriptRunnerStatus {
     pending
@@ -93,23 +105,40 @@ enum ScriptRunnerStatus {
 
 model ScriptRunnerRequest {
     id     Int                @id @default(autoincrement()) // task id
-    Script String
-    Args   String[]
-    Status ScriptRunnerStatus @default(pending)
+    script String
+    args   String[] // example - ["arg1", "arg2"]
+    status ScriptRunnerStatus @default(pending)
 
-    senderId           Int
-    sender             Sender               @relation(fields: [senderId], references: [id])
-    ScriptRunnerResult ScriptRunnerResult[]
+    senderId Int
+    sender   Sender @relation(fields: [senderId], references: [id])
+
+    result ScriptRunnerResult?
 }
 
 model ScriptRunnerResult {
     id Int @id @default(autoincrement())
 
-    Output   String
-    Error    String
-    Success  Boolean
-    ExitCode Int
+    output   String
+    error    String
+    success  Boolean
+    exitCode Int
 
-    scriptRunnerRequestId Int // task id
     scriptRunnerRequest   ScriptRunnerRequest @relation(fields: [scriptRunnerRequestId], references: [id])
+    scriptRunnerRequestId Int                 @unique
+}
+
+// Syslog messages
+model LogMessage {
+    id              Int    @id @default(autoincrement()) // task id
+    version         Int
+    facilityMessage String
+    facilityLevel   String
+    severityMessage String
+    severityLevel   String
+    hostname        String
+    appname         String
+    message         String
+    timestamp       Int
+    senderId        Int
+    sender          Sender @relation(fields: [senderId], references: [id])
 }

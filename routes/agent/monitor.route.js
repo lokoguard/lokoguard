@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const prisma = require("../../db").getInstance();
  
-
-router.get("/file-integrity/files", async (req, res) => {
+// Fetch all the files that are going to be watched by the agent
+router.get("/file", async (req, res) => {
     try {
-        const integrity_reports = await prisma.watchingFile.findMany({
+        const requestedWatchers = await prisma.fileWatcher.findMany({
             where: {
                 senderId: req.sender.id,
             },
@@ -12,18 +12,19 @@ router.get("/file-integrity/files", async (req, res) => {
                 FileName: true,
             }
         })
-        const file_names = integrity_reports.map(report => report.FileName);
+        const file_names = requestedWatchers.map(report => report.FileName);
         return res.status(200).json(file_names);
     } catch (error) {
         return res.status(500).json({ error: "Unexpected Error" });
     }
 });
 
-router.post("/file-integrity/result", async (req, res) => {
+// Submit the results of accessing the files by the agent
+router.post("/file", async (req, res) => {
     try { 
-        const integrity_reports = req.body;
-        await prisma.$transaction(integrity_reports.map(report => {
-            return prisma.fileIntegrityMonitor.create({
+        const access_reports = req.body;
+        await prisma.$transaction(access_reports.map(report => {
+            return prisma.fileAccessEvent.create({
                 data: {
                     senderId: req.sender.id,
                     FileName: report.file_name,
@@ -39,7 +40,8 @@ router.post("/file-integrity/result", async (req, res) => {
     }
 });
 
-router.post("/resource-usage", async (req, res) => {
+// submit the resource details of the host by the agent
+router.post("/resource", async (req, res) => {
     try {
         const usage_reports = req.body;
         await prisma.$transaction(usage_reports.map(report => {
