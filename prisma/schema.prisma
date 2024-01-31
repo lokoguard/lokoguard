@@ -47,6 +47,7 @@ model Sender {
     fileWatchers        FileWatcher[]
     logMessages         LogMessage[]
     crashLogs           CrashLog[]
+    FileAccessEvent     FileAccessEvent[]
 }
 
 // AuthToken is used to authenticate the sender
@@ -80,6 +81,8 @@ model FileAccessEvent {
     fileName  String
     eventType FileAccessEventType
     timestamp Int
+    senderId  Int
+    sender    Sender              @relation(fields: [senderId], references: [id])
 }
 
 // Resource monitoring

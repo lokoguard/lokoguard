@@ -1,0 +1,15 @@
+meta {
+  name: Fetch All Monitors
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{BASE_URL}}/api/agent/monitor/file
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{AGENT_TOKEN}}
+}

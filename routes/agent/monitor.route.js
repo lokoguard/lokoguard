@@ -27,15 +27,16 @@ router.post("/file", async (req, res) => {
             return prisma.fileAccessEvent.create({
                 data: {
                     senderId: req.sender.id,
-                    FileName: report.file_name,
-                    EventType: report.type,
-                    Timestamp: report.timestamp,
+                    fileName: report.file_name,
+                    eventType: report.type,
+                    timestamp: report.timestamp,
                 }
             })
         }))
         return res.status(200).json({ message: "OK" });
     
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Unexpected Error" });
     }
 });
