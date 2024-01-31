@@ -49,18 +49,19 @@ router.post("/resource", async (req, res) => {
             return prisma.resourceStats.create({
                 data: {
                     senderId: req.sender.id,
-                    CPUStats: report.cpu_stats,
-                    MemStat: report.mem_stat,
-                    DiskStats: report.disk_stats,
-                    TemperatureStats: report.temp_stats,
-                    NetStat: report.net_stat,
-                    HostInfo: report.host_info,
-                    Timestamp: report.timestamp,
+                    cpuStats: report.cpu_stats,
+                    memStat: report.mem_stat,
+                    diskStats: report.disk_stats,
+                    temperatureStats: report.temp_stats,
+                    netStat: report.net_stat,
+                    hostInfo: report.host_info,
+                    timestamp: report.timestamp,
                 }
             })
         }))
         return res.status(200).json({ message: "OK" });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Unexpected Error" });
     }
 

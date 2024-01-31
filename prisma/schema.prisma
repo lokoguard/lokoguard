@@ -88,12 +88,12 @@ model FileAccessEvent {
 // Resource monitoring
 model ResourceStats {
     id               Int  @id @default(autoincrement())
-    cpuStats         Json @default("[]")
-    memStat          Json @default("{}")
-    diskStats        Json @default("[]")
-    temperatureStats Json @default("[]")
-    netStat          Json @default("{}")
-    hostInfo         Json @default("{}")
+    cpuStats         Json @default("[]") // array of cpu usage
+    memStat          Json @default("{}") // free, total, used in GB
+    diskStats        Json @default("[]") // array of disk usage {path, free, total, used in GB}
+    temperatureStats Json @default("[]") // array of temperature {sensor, temperature in celcius}
+    netStat          Json @default("{}") // {bytesSent, bytesReceived}
+    hostInfo         Json @default("{}") // dictionary of host info
     timestamp        Int
 
     senderId Int

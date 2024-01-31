@@ -1,0 +1,21 @@
+meta {
+  name: Submit Resource Usage
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/api/agent/monitor/resource
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{AGENT_TOKEN}}
+}
+
+body:json {
+  [
+    {"cpu_stats":[0.1,0.2],"mem_stat":{"total_gb":12.2,"used_gb":8,"available_gb":0,"free_gb":0,"cached_gb":0},"disk_stats":[12,45,567],"temp_stats":[12],"net_stat":{"bytes_sent":0,"bytes_recv":0},"host_info":{"hostname":"","uptime":0,"boot_time":0,"os":"","platform":"","platform_family":"","platform_version":"","kernel_version":"","kernel_arch":"","virtualization_system":"","virtualization_role":""},"timestamp":1706714169}
+  ]
+}
