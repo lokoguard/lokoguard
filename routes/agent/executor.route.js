@@ -6,27 +6,26 @@ router.get("", async (req, res) => {
         const executors = await prisma.scriptRunnerRequest.findMany({
             where: {
                 senderId: req.sender.id,
-                Status: "pending"
+                status: "pending"
             }
         })
-        return res.status(200).json({ executors });
+        return res.status(200).json(executors);
     } catch (error) {
         return res.status(500).json({ error: "Unexpected Error" });
     }
 })
 
-router.post("/result", async (req, res) => {
+router.post("/submit", async (req, res) => {
     try {
         const { task_id, output, error, success, exit_code } = req.body;
         await prisma.$transaction([
             prisma.scriptRunnerResult.create({
                 data: {
-                    scriptRunnerRequestId: task_id,
-                    TaskId: task_id,
-                    Output: output,
-                    Error: error,
-                    Success: success,
-                    ExitCode: exit_code
+                    output: output,
+                    error: error,
+                    success: success,
+                    exitCode: exit_code,
+                    scriptRunnerRequestId: task_id
                 }
             }),
             prisma.scriptRunnerRequest.update({
@@ -34,12 +33,13 @@ router.post("/result", async (req, res) => {
                     id: task_id
                 },
                 data: {
-                    Status: "done"
+                    status: "done"
                 }
             })
         ])
         return res.status(200).json({ message: "OK" });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Unexpected Error" });
     }
 })
