@@ -22,17 +22,15 @@ router.get("/file", async (req, res) => {
 // Submit the results of accessing the files by the agent
 router.post("/file", async (req, res) => {
     try {
-        const access_reports = req.body;
-        await prisma.$transaction(access_reports.map(report => {
-            return prisma.fileAccessEvent.create({
+        const fileAccessEvent = req.body;
+        await prisma.fileAccessEvent.create({
                 data: {
                     senderId: req.sender.id,
-                    fileName: report.file_name,
-                    eventType: report.type,
-                    timestamp: report.timestamp,
+                    fileName: fileAccessEvent.file_name,
+                    eventType: fileAccessEvent.type,
+                    timestamp: fileAccessEvent.timestamp,
                 }
             })
-        }))
         return res.status(200).json({ message: "OK" });
 
     } catch (error) {
@@ -44,7 +42,7 @@ router.post("/file", async (req, res) => {
 router.post("/resource", async (req, res) => {
     try {
         const report = req.body;
-        prisma.resourceStats.create({
+        await prisma.resourceStats.create({
             data: {
                 senderId: req.sender.id,
                 cpuStats: report.cpu_stats,

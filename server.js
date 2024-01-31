@@ -1,14 +1,12 @@
 require('dotenv').config();
+const express = require('express');
+var cors = require('cors');
+const morgan = require('morgan');
 
 const PORT = process.env.PORT || 3000;
 
-// Express
-const express = require('express');
-// const Middleware = require("./middleware");
-var cors = require('cors');
-const Middleware = require('./middleware');
+// App
 const app = express();
-// Config
 app.disable('x-powered-by')
 app.use(express.json());
 app.use(express.text());
@@ -18,6 +16,7 @@ app.use(cors({
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     optionsSuccessStatus: 200
 }))
+app.use(morgan("tiny"));
 
 // Routes
 app.use('/api/management', require('./routes/management.route'));

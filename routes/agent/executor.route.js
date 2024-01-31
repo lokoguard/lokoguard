@@ -17,7 +17,7 @@ router.get("", async (req, res) => {
 
 router.post("/submit", async (req, res) => {
     try {
-        const { task_id, output, error, success, exit_code } = req.body;
+        const { id, output, error, success, exit_code } = req.body;
         await prisma.$transaction([
             prisma.scriptRunnerResult.create({
                 data: {
@@ -25,12 +25,12 @@ router.post("/submit", async (req, res) => {
                     error: error,
                     success: success,
                     exitCode: exit_code,
-                    scriptRunnerRequestId: task_id
+                    scriptRunnerRequestId: id
                 }
             }),
             prisma.scriptRunnerRequest.update({
                 where: {
-                    id: task_id
+                    id: id
                 },
                 data: {
                     status: "done"
