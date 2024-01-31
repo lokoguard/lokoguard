@@ -7,14 +7,18 @@ async function main() {
     if (users.length === 0) {
         // create admin user
         let passwordHash = await bcrypt.hash("admin", 10);
-        const user = await db.user.create({
+        await db.user.create({
             data: {
                 email: "admin@localhost",
                 passwordHash: passwordHash,
                 name: "Admin"
             }
-        }
-        )
+        })
+        console.log("Admin user created");
+        console.log("Email: admin@localhost");
+        console.log("Password: admin");
+    } else {
+        console.log("Users already exists");
     }
 }
 
