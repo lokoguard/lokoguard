@@ -1,0 +1,23 @@
+meta {
+  name: Submit Crash log
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/api/agent/crash_log
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{AGENT_TOKEN}}
+}
+
+body:json {
+  {
+    "message": "hemlo error",
+    "stack_trace": "i am stack tracwe",
+    "other_info": "version: 454"
+  }
+}

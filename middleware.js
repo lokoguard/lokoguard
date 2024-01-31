@@ -68,7 +68,6 @@ class Middleware {
             req.is_device = true;
             next();
         } catch (err) {
-            console.log(err);
             res.status(401).json({
                 message: "Unauthorized"
             });
@@ -85,12 +84,11 @@ class Middleware {
             if (req.sender && req.sender.type === "APP") {
                 next();
             } else {
-                throw new Error("Unauthorized");
+                throw new Error("Only allowed for application");
             }
         } catch (err) {
-            console.log(err);
-            res.status(401).json({
-                message: "Unauthorized"
+            res.status(403).json({
+                message: "Only allowed for application"
             });
         }
     }

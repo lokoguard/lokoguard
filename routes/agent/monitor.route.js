@@ -36,7 +36,6 @@ router.post("/file", async (req, res) => {
         return res.status(200).json({ message: "OK" });
     
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: "Unexpected Error" });
     }
 });
@@ -61,7 +60,6 @@ router.post("/resource", async (req, res) => {
         }))
         return res.status(200).json({ message: "OK" });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: "Unexpected Error" });
     }
 
