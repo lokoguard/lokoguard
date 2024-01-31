@@ -74,6 +74,26 @@ class Middleware {
             });
         }
     }
+
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     */
+    static async onlyApplication(req, res, next) {
+        try {
+            if (req.sender && req.sender.type === "APP") {
+                next();
+            } else {
+                throw new Error("Unauthorized");
+            }
+        } catch (err) {
+            console.log(err);
+            res.status(401).json({
+                message: "Unauthorized"
+            });
+        }
+    }
 }
 
 module.exports = Middleware;

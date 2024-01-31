@@ -46,6 +46,7 @@ model Sender {
     scriptRunnerRequest ScriptRunnerRequest[]
     fileWatchers        FileWatcher[]
     logMessages         LogMessage[]
+    crashLogs           CrashLog[]
 }
 
 // AuthToken is used to authenticate the sender
@@ -141,4 +142,15 @@ model LogMessage {
     timestamp       Int
     senderId        Int
     sender          Sender @relation(fields: [senderId], references: [id])
+}
+
+// Crash Logs
+model CrashLog {
+    id         Int    @id @default(autoincrement())
+    timestamp  Int
+    message    String
+    stackTrace String
+    otherInfo  Json   @default("{}")
+    senderId   Int
+    sender     Sender @relation(fields: [senderId], references: [id])
 }
