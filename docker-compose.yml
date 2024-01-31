@@ -9,6 +9,15 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
       - PORT=3000
+  prisma_studio:
+    build: .
+    entrypoint: npx prisma studio
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
   db:
     image: postgres
     environment:
