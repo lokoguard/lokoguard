@@ -137,5 +137,72 @@ router.post("/:id/auth", async (req, res) => {
     });
 })
 
+// Fetch analytics data
+router.get("/:id/analytics", async (req, res) => {
+    const { id } = req.params;
+    const sender = await prisma.sender.findFirst({
+        where: {
+            id: parseInt(id)
+        }
+    });
+    if(!sender) return res.status(404).json({
+        error: "Not Found"
+    });
+    const analytics = await prisma.resourceStats.findMany({
+        where: {
+            senderId: parseInt(id)
+        },
+        orderBy: {
+            timestamp: "desc"
+        },
+        take: 50
+    });
+    res.json(analytics);
+})
+
+// Fetch logs
+router.get("/:id/logs", async (req, res) => {
+    const { id } = req.params;
+    const sender = await prisma.sender.findFirst({
+        where: {
+            id: parseInt(id)
+        }
+    });
+    if(!sender) return res.status(404).json({
+        error: "Not Found"
+    });
+    const logs = await prisma.logMessage.findMany({
+        where: {
+            senderId: parseInt(id)
+        },
+        orderBy: {
+            timestamp: "desc"
+        }
+    });
+    res.json(logs);
+})
+
+// Crashlytics
+router.get("/:id/crashlogs", async (req, res) => {
+    const { id } = req.params;
+    const sender = await prisma.sender.findFirst({
+        where: {
+            id: parseInt(id)
+        }
+    });
+    if(!sender) return res.status(404).json({
+        error: "Not Found"
+    });
+    const crashlytics = await prisma.crashLog.findMany({
+        where: {
+            senderId: parseInt(id)
+        },
+        orderBy: {
+            timestamp: "desc"
+        }
+    });
+    res.json(crashlytics);
+})
+
 
 module.exports = router;
