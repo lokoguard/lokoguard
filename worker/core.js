@@ -3,6 +3,11 @@ const prisma = require("../db").getInstance();
 const vm = require('vm');
 const helperFunctions = require("./helperFunctions");
 const Queue = require('bee-queue');
+const redis = require('redis');
+
+const sharedConfig = {
+    redis: redis.createClient(process.env.REDIS_URL),
+};
 
 const hooks = ["on_new_log", "on_file_event", "on_disk_usage_update", "on_memory_usage_update", "on_cpu_usage_update"]
 const hooksConcurrency = {
@@ -12,7 +17,7 @@ const hooksConcurrency = {
     on_memory_usage_update: 1,
     on_cpu_usage_update: 1
 }
-const hooksQueue = new Map(hooks.map(hook => [hook, new Queue(hook)]));
+const hooksQueue = new Map(hooks.map(hook => [hook, new Queue(hook, sharedConfig)]));
 
 async function prepareFunctionContext() {
     // Prepare function context

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node seed.js && node server.js",
+    "start": "npx prisma generate && node seed.js && node server.js",
+    "worker": "npx prisma generate && node worker.js",
     "dev": "nodemon server.js",
     "dbMigrate": "npx prisma migrate dev && npx prisma generate",
     "prisma": "npx prisma studio",

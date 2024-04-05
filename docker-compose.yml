@@ -1,23 +1,36 @@
 version: "3.9"
 services:
-  # web:
-  #   build: .
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
-  #     - PORT=3000
-  # prisma_studio:
-  #   build: .
-  #   entrypoint: npx prisma studio
-  #   ports:
-  #     - "5555:5555"
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - PORT=3000
+      - NTFY_URL=https://ntfy.sh/random
+      - REDIS_URL=redis://redis:6379
+  worker:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - PORT=3000
+      - NTFY_URL=https://ntfy.sh/random
+      - REDIS_URL=redis://redis:6379
+    restart: always
+    entrypoint: npm run worker
+  prisma_studio:
+    build: .
+    entrypoint: npx prisma studio
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
   db:
     image: postgres
     environment:
@@ -29,9 +42,21 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
+  redis:
+    image: docker.io/bitnami/redis:7.2
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
 volumes:
   pgdata:
+    driver: local
+  redis_data:
+    driver: local

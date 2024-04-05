@@ -1,3 +1,5 @@
+const { updatePolicyGlobalVersion } = require("../../policyGlobalVersion");
+
 const router = require("express").Router();
 const prisma = require("../../db").getInstance();
 
@@ -48,6 +50,7 @@ router.delete("/:id", async (req, res) => {
             id: parseInt(id)
         }
     });
+    await updatePolicyGlobalVersion()
     res.json({
         message: "OK"
     })
@@ -88,6 +91,7 @@ router.put("/:id", async (req, res) => {
             workspace
         }
     });
+    await updatePolicyGlobalVersion()
     res.json({
         message: "OK"
     })

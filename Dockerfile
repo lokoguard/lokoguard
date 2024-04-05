@@ -1,5 +1,8 @@
-FROM node:18.18.0-bullseye
+FROM node:20.12-bookworm
 WORKDIR /app
+
+# Install openssl
+RUN apt-get update -y && apt-get install -y openssl
 
 # Copy source code
 COPY . .

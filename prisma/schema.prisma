@@ -171,8 +171,14 @@ model IssueReport {
 
 // Policy
 model Policy {
-    id                Int    @id @default(autoincrement())
-    name              String
-    workspace         Json   @default("{}")
-    generatedCode     String
+    id            Int    @id @default(autoincrement())
+    name          String
+    workspace     Json   @default("{}")
+    generatedCode String
+}
+
+// System Setting
+model SystemSetting {
+    id                      Int @id @default(autoincrement())
+    policyCodeGlobalVersion Int @default(0)
 }
