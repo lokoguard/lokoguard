@@ -6,8 +6,8 @@ const Queue = require('bee-queue');
 
 const hooks = ["on_new_log", "on_file_event", "on_disk_usage_update", "on_memory_usage_update", "on_cpu_usage_update"]
 const hooksConcurrency = {
-    on_new_log: 20,
-    on_file_event: 5,
+    on_new_log: 1,
+    on_file_event: 1,
     on_disk_usage_update: 1,
     on_memory_usage_update: 1,
     on_cpu_usage_update: 1
