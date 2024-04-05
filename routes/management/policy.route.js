@@ -3,10 +3,7 @@ const prisma = require("../../db").getInstance();
 
 // Policy list
 router.get("/", async (req, res) => {
-    const policy = await prisma.policy.findFirst({
-        where: {
-            senderId: parseInt(id)
-        },
+    const policy = await prisma.policy.findMany({
         select: {
             id: true,
             name: true
