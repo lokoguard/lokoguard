@@ -48,6 +48,7 @@ model Sender {
     logMessages         LogMessage[]
     crashLogs           CrashLog[]
     FileAccessEvent     FileAccessEvent[]
+    issueReports        IssueReport[]
 }
 
 // AuthToken is used to authenticate the sender
@@ -156,4 +157,22 @@ model CrashLog {
     otherInfo  Json   @default("{}")
     senderId   Int
     sender     Sender @relation(fields: [senderId], references: [id])
+}
+
+// Issue Report
+model IssueReport {
+    id        Int    @id @default(autoincrement())
+    timestamp Int
+    message   String
+    action    String
+    senderId  Int
+    sender    Sender @relation(fields: [senderId], references: [id])
+}
+
+// Policy
+model Policy {
+    id                Int    @id @default(autoincrement())
+    name              String
+    workspace         Json   @default("{}")
+    generatedCode     String
 }

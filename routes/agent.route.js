@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const middleware = require("../middleware");
+const middleware = require("./middleware");
 
 
 router.use("/auth", require("./agent/auth.route"))

@@ -204,5 +204,26 @@ router.get("/:id/crashlogs", async (req, res) => {
     res.json(crashlytics);
 })
 
+// Issue Reports
+router.get("/:id/issues", async (req, res) => {
+    const { id } = req.params;
+    const sender = await prisma.sender.findFirst({
+        where: {
+            id: parseInt(id)
+        }
+    });
+    if(!sender) return res.status(404).json({
+        error: "Not Found"
+    });
+    const issues = await prisma.issueReport.findMany({
+        where: {
+            senderId: parseInt(id)
+        },
+        orderBy: {
+            timestamp: "desc",
+        }
+    });
+    res.json(issues);
+})
 
 module.exports = router;

@@ -2,7 +2,7 @@ const router = require("express").Router();
 const prisma = require("../../db").getInstance();
 const bcrypt = require('bcrypt');
 const { generateApiKey } = require("generate-api-key");
-const middleware = require("../../middleware");
+const middleware = require("../middleware");
 
 
 router.post("/login", async (req, res) => {

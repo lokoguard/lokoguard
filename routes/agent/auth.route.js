@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const middleware = require("../../middleware");
+const middleware = require("../middleware");
 
 // Verify
 router.get("/verify", middleware.deviceAuth, async (req, res) => {

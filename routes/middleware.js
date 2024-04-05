@@ -1,5 +1,5 @@
 
-const prisma = require("./db").getInstance();
+const prisma = require("../db").getInstance();
 
 class Middleware {
     /**
