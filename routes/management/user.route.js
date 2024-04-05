@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const prisma = require("../../db").getInstance();
+const bcrypt = require('bcrypt');
 
 // Get all users
 router.get("/", async (req, res) => {
@@ -20,7 +21,7 @@ router.post("/", async (req, res) => {
         error: "Missing required fields"
     });
     let passwordHash = await bcrypt.hash(password, 10);
-    await db.user.create({
+    await prisma.user.create({
         data: {
             email: email,
             passwordHash: passwordHash,

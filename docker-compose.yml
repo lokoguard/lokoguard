@@ -11,6 +11,7 @@ services:
       - PORT=3000
       - NTFY_URL=https://ntfy.sh/random
       - REDIS_URL=redis://redis:6379
+    restart: always
   worker:
     build: .
     depends_on:
