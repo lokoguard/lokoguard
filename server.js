@@ -21,23 +21,9 @@ app.use(morgan("tiny"));
 // Routes
 app.use('/api/management', require('./routes/management.route'));
 app.use('/api/agent', require('./routes/agent.route'));
-
-// 404 handler
-app.get('*', (req, res) => {
-    res.status(404).json({ error: "Not Found" });
-})
-app.post('*', (req, res) => {
-    res.status(404).json({ error: "Not Found" });
-})
-app.patch('*', (req, res) => {
-    res.status(404).json({ error: "Not Found" });
-})
-app.put('*', (req, res) => {
-    res.status(404).json({ error: "Not Found" });
-})
-app.delete('*', (req, res) => {
-    res.status(404).json({ error: "Not Found" });
-})
+// Dashboard
+app.use(express.static('www'));
+app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'www', 'index.html')))
 
 // Global error handler
 app.use((err, req, res, next) => {
