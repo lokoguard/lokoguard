@@ -61,7 +61,8 @@ router.post("/", async (req, res) => {
     const { name } = req.body;
     await prisma.policy.create({
         data: {
-            name
+            name,
+            generatedCode: "",
         }
     });
     res.json({
