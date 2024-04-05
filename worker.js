@@ -1,4 +1,11 @@
 require('dotenv').config();
-const prisma = require("./db").getInstance();
+const { prepareFunctionContext, runHooksJob } = require("./worker/core");
 
-// Function mapping
+
+async function main() {
+    await runHooksJob();
+}
+
+
+main()
+    .catch(e => console.error(e))

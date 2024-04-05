@@ -1,10 +1,12 @@
+const { enqueueOnNewLog } = require("../../worker/enqueue");
+
 const router = require("express").Router();
 const prisma = require("../../db").getInstance();
 
 router.post("", async (req, res) => {
     try {
         const body = req.body;
-        await prisma.logMessage.create({
+        const logRecord = await prisma.logMessage.create({
             data: {
                 version: body.version,
                 appname: body.appname,
@@ -18,6 +20,7 @@ router.post("", async (req, res) => {
                 senderId: req.sender.id
             }
         })
+        await enqueueOnNewLog(logRecord.id, logRecord.message, logRecord.facilityLevel, logRecord.severityLevel, req.sender.id, req.sender.hostname)
         return res.status(200).json({ message: "OK" });
     } catch (error) {
         return res.status(500).json({ error: "Unexpected Error" });
