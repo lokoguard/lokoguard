@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 // Delete user
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
-    if (id === req.user.id) {
+    if (id == req.user.id) {
         return res.status(400).json({
             error: "Cannot delete yourself"
         });
